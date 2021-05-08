@@ -1,0 +1,8 @@
+<form action="{% url 'home' %}" method="post" autocomplete="off">
+    {%csrf_token%}
+<input type="text" placeholder="Title" name="title">
+<input type="text" placeholder="Details" name="details">
+
+<input type="submit">
+
+</form>
