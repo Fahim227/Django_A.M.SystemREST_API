@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpRequest, JsonResponse
 from . models import User, Apartments, MyImage
-from .serializers import Apartmentserializer,Reportserializer, Paybillserializer, imageSerializer
+from .serializers import Apartmentserializer,Reportserializer, Paybillserializer, imageSerializer, UserSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 # Create your views here.
@@ -162,6 +162,54 @@ def decode_base64_file(data):
         complete_file_name = "%s.%s" % (file_name, file_extension, )
 
         return ContentFile(decoded_file, name=complete_file_name)
+@api_view(['POST'])
+def register_user(request):
+  serializer = UserSerializer(data=request.data)
+  res = {}
+  if serializer.is_valid():
+    saveSerializer = serializer.save()
+    print(saveSerializer.id)
+    res = {
+          'userid': saveSerializer.id,
+          'response' : True,
+          'message' : "Registered Successfully"
+    }
+  else:
+    print(serializer.errors)
+    res = {
+          'response' : False,
+          'message' : "Registered Unsuccessful"
+    }
+  res_json = json.dumps(res)
+  return HttpResponse(res_json)
+
+@api_view(['POST'])
+def login_user(request):
+  user = User.objects.get(email=request.data.get('email'))
+  print(type(user))
+  res = {}
+  if not user:
+     res = {
+            'response' : False,
+            'message' : "Account Invalid"
+      }
+  else:
+    if request.data.get('password') == user.password:
+      res = {
+            'userid': user.id,
+            'response' : True,
+            'message' : "Login Successfully"
+      }
+    else:
+      res = {
+            'response' : False,
+            'message' : "Password Invalid"
+      }
+   
+  res_json = json.dumps(res)
+  return HttpResponse(res_json)
+
+
 
 """
 def insert_user_info(request):
@@ -198,14 +246,7 @@ def insert_complaint_section_info(request):
      else:
        return render(request,'OurProject/complaint_section.html')
 
-def insert_user_info(request):
-  #  AppartmentId=User(request.GET['apartment_id'])
-    UserInfo=User(first_name=request.POST.get('FirstName'),last_name=request.POST.get('LastName'),phone_number=request.POST.get('PhoneNumber'),user_type=request.POST.get('UserType'))
-    UserInfo.save()
-    return HttpResponse("Congratulations!You are successfully registered to Nagorik Seba")
 
-
-   
 def insert_Apartment_info(request):
      if request.method == 'POST':
        ApartmentInfo=Apartments(flat_number=request.POST.get('FlatNumber'),building_name=request.POST.get('BuildingName'),building_number=request.POST.get('BuildingNumber'),building_address=request.POST.get('BuildingAddress'),flat_size=request.POST.get('FlatSize'),num_of_beds=request.POST.get('NumOfBeds'),num_of_toilet=request.POST.get('NumOfToilet'),num_of_balcony=request.POST.get('NumOfBalcony'),map_address=request.POST.get('MapAddress'),location=request.POST.get('Location'))

@@ -12,5 +12,7 @@ urlpatterns = [
     path('insertBill/', views.insert_bill,name='insert_bill'),
     path('trial/', views.trial,name='trial'),
     path('getOwnerFlats/', views.getOwnedFlats,name='ownedFlats'),
-    path('getAllFlats/',views.show_flats,name='AllFlats')
+    path('getAllFlats/',views.show_flats,name='AllFlats'),
+    path('registerUser/',views.register_user,name='UserRegistrations'),
+    path('loginUser/',views.login_user,name='UserRegistrations')
 ]

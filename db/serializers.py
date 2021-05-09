@@ -1,6 +1,6 @@
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
-from .models import  Apartments,complaint_section, bill,  MyImage
+from .models import  Apartments,complaint_section, bill,  MyImage, User
 
 class Apartmentserializer(serializers.ModelSerializer):
     class Meta:
@@ -18,10 +18,14 @@ class Paybillserializer(serializers.ModelSerializer):
         model = bill
         fields = '__all__'
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = '__all__'
+
 
 
 class imageSerializer(serializers.ModelSerializer):
-    # model_pic=Base64ImageField()
     class Meta:
         model = MyImage
         fields = '__all__'
