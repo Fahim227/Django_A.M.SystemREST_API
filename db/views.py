@@ -185,8 +185,7 @@ def register_user(request):
 
 @api_view(['POST'])
 def login_user(request):
-  user = User.objects.get(email=request.data.get('email'))
-  print(type(user))
+  user = User.objects.filter(email=request.data.get('email')).first()
   res = {}
   if not user:
      res = {
